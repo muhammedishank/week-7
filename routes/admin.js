@@ -159,8 +159,6 @@ router.get('/edit-brand/:id', async (req, res) => {
   res.render('admin/brand-edit', { admin: true, ftwo: true, brand })
 })
 router.post('/edit-brand',storage.single('brandLogo'),(req,res)=>{
-  console.log("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP");
-  console.log(req.body);
   let img = req.file.filename
   productHelpers.editBrand(req.body,img).then((prodId) => {
     res.redirect('/admin/brand')

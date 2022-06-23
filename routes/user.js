@@ -36,10 +36,10 @@ router.get('/', async function (req, res) {
     const cartCount = await cartHelpers.cartCount(req.session.user._id)
     const wishlistCount = await wishlistHelpers.wishlistCount(req.session.user._id)
     const user = req.session.user
-    res.render('user/user-home', { user, products, cartCount, wishlistCount, newArrivals,brands })
+    res.render('user/user-home', { user, products, cartCount, wishlistCount, newArrivals, brands })
 
   } else {
-    res.render('user/user-home', { products, newArrivals,brands })
+    res.render('user/user-home', { products, newArrivals, brands })
   }
 
 
@@ -169,9 +169,10 @@ router.post('/fgphnumVarify', (req, res) => {
     }
   })
 })
-router.post('/fgtotpvarfy', (req, res) => {
-  const mobile = req.session.fgmobile
 
+router.post('/fgtotpvarfy', (req, res) => {
+
+  const mobile = req.session.fgmobile
   client.verify
     .services(ServiceSID)
     .verificationChecks.create({
@@ -221,7 +222,7 @@ router.get('/add-to-cart/:id', varfyingLoggin, async (req, res) => {
   })
 })
 router.post('/change-product-quantity', async (req, res) => {
-  
+
   cartHelpers.changeProductQuantity(req.body).then(async (response) => {
     cartHelpers.changeCartSubtotal(req.body).then(() => { })
     const products = await cartHelpers.getCartProducts(req.session.user._id)
@@ -530,15 +531,15 @@ router.post('/search-brand', (req, res) => {
 })
 router.get('/products', async (req, res) => {
   const brand = await shoppingHelpers.getAllbrand()
-  const category = await shoppingHelpers.getAllcategory() 
+  const category = await shoppingHelpers.getAllcategory()
   res.render('user/shopping', { filterResult, brand, category })
 })
 router.get('/oneBrand/:id', async (req, res) => {
-  filterResult =  await shoppingHelpers.getOneBrand(req.params.id)
+  filterResult = await shoppingHelpers.getOneBrand(req.params.id)
   // console.log(filterResult.length);
   res.redirect('/products')
 })
-router.get('/latest-products', async (req,res)=>{
+router.get('/latest-products', async (req, res) => {
   filterResult = await shoppingHelpers.Newarrivals()
   res.redirect('/products')
 })
