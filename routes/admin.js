@@ -22,11 +22,7 @@ const varfyingLoggedin = (req, res, next) => {
   }
 }
 router.get('/',varfyingLoggedin, function (req, res) {
-  // if (req.session.adminLoggedin) {
-  //   res.redirect('/admin/dashboard')
-  // } else {
-  //   res.render('admin/login', { admin: true })
-  // }
+  res.redirect('/admin/dashboard')
 })
 router.get('/dashboard',varfyingLoggedin, function (req, res) {
   res.render('admin/admin-home', { admin: true,ftwo:true })
@@ -42,7 +38,12 @@ router.post('/login', function (req, res, next) {
     }
   })
 });
-
+router.get('/admin-logout', async (req, res) => {
+  
+  req.session.adminLoggedin = false
+  
+  res.redirect('/admin')
+})
 // add product
 router.get('/product-table',varfyingLoggedin, async function (req, res, next) {
   const categories = await productHelpers.getAllCategory()
