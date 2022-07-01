@@ -29,7 +29,7 @@ module.exports = {
     let d1, d2, text;
     if (!startDate || !endDate) {
       d1 = new Date();
-      d1.setDate(d1.getDate() - 7);
+      d1.setDate(d1.getDate() - 30);
       d2 = new Date();
       text = "For the Last 7 days";
     } else {
@@ -67,7 +67,7 @@ module.exports = {
 
         {
           $match: {
-            status:'pending'
+            status:'failed'
             },
           
         },
@@ -123,9 +123,13 @@ module.exports = {
           }
         }
       ]).toArray()
-      console.log('', totalAmounts[0].totalAmount);
-
-      response.pendingAmount = pendingAmount[0].totalPendingFund
+    
+      if(pendingAmount.length>0){
+        response.pendingAmount = pendingAmount[0].totalPendingFund
+      } else{
+        response.pendingAmount = 0
+      }
+      // response.pendingAmount = pendingAmount[0].totalPendingFund
       response.salesReport = salesReport
       response.brandReport = brandReport
       response.orderCount = orderCount

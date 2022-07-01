@@ -922,7 +922,7 @@
             success: (response) => {
 
                 document.getElementById('totalOrder').innerHTML = response.orderCount
-                document.getElementById('totalAmountPaid').innerHTML = 'Rs ' + response.totalAmountPaid
+                document.getElementById('totalAmountPaid').innerHTML = 'Rs ' + (parseInt(response.totalAmountPaid)-parseInt(response.pendingAmount))
                 document.getElementById('totalAmountRefund').innerHTML =  'Rs ' + response.totalAmountRefund
                 document.getElementById('revenue').innerHTML = 'Rs ' + (parseInt(response.totalAmountPaid) - parseInt(response.totalAmountRefund) - parseInt(response.pendingAmount)) 
 
@@ -939,7 +939,7 @@
                         labels: response.dateArray,
                         datasets: [{
                             label: "last week dataset",
-                            backgroundColor: 'rgb(255, 179, 255)',
+                            backgroundColor: ['rgb(255, 128, 179)', 'rgb(51, 153, 255)','rgb(102, 255, 224)','rgb(140, 255, 102)','rgb(255, 219, 77)','rgb(140, 140, 140)','rgb(77, 195, 255)'],
                             borderColor: 'rgb(128, 204, 255)',
                             borderWidth: 1,
                             data: response.totalArray,
@@ -965,7 +965,7 @@
                         labels: response.brandArray,
                         datasets: [{
                             label: "brand wise dataset",
-                            backgroundColor: ['rgb(218, 201, 252)', 'rgb(132, 222, 226)','rgb(213, 219, 175)'],
+                            backgroundColor: ['rgb(255, 128, 179)', 'rgb(51, 153, 255)','rgb(102, 255, 224)','rgb(140, 255, 102)','rgb(255, 219, 77)','rgb(140, 140, 140)','rgb(77, 195, 255)'],
                             borderColor: ['rgb(255, 255, 255)', 'rgb(255, 255, 255)', 'rgb(255, 255, 255)'],
                             data: response.sumArray,
                         }]

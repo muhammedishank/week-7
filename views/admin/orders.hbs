@@ -382,6 +382,7 @@
                                         <th scope="col">Order ID & Date</th>
 
                                         <th scope="col">Payment Method</th>
+                                        <th scope="col">Status</th>
 
                                         <th scope="col">Details</th>
                                     </tr>
@@ -408,10 +409,12 @@
                                         </td>
 
                                         <td>
-                                            <div>Payment Method :{{this.paymentMethod}} </div>
-                                            <div>Payment Status :{{this.status}}</div>
+                                            <div>{{this.paymentMethod}} </div>
                                         </td>
+                                        <td>
 
+                                            <div>Order<br>{{this.status}}</div>
+                                        </td>
                                         <td><a href="/admin/viewOrderProducts/{{this._id}}"
                                                 class="btn btn-primary">Details</a></td>
                                     </tr>
@@ -420,13 +423,15 @@
                                 </tbody>
 
 
+
+
                             </table>
                         </div>
                     </div>
                 </div>
 
             </div>
-           
+
         </div>
     </div>
 </div>

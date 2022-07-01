@@ -87,7 +87,7 @@ module.exports = {
 
             console.log(couponOff);
 
-            let status = order['payment-method'] === 'COD' ? 'placed' : 'pending'
+            let status = order['payment-method'] === 'COD' ? 'placed' : 'failed'
             let orderObj = {
                 deliveryDetails: {
                     firstName: order.fname,
@@ -272,7 +272,7 @@ module.exports = {
             if(orderedDetails.couponDiscount>0){
                 orderedDetails.discount =true
             }
-            if (orderedDetails.status == 'pending') {
+            if (orderedDetails.status == 'failed') {
                 orderedDetails.pending = true
                 resolve(orderedDetails)
             } else {
@@ -334,7 +334,8 @@ module.exports = {
     getAllOrders: (userId) => {
         return new Promise(async (resolve, reject) => {
             let orders = await db.get().collection(collection.ORDER_COLLECTION).find({ userId: ObjectId(userId) }).toArray();
-            // console.log(orders);
+             
+
             resolve(orders)
         })
 

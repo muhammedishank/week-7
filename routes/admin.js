@@ -14,15 +14,22 @@ const billingHelpers = require('../helpers/billing-helpers');
 const { promise } = require('bcrypt/promises');
 
 /* GET users listing. */
-router.get('/', function (req, res) {
+const varfyingLoggedin = (req, res, next) => {
   if (req.session.adminLoggedin) {
-    res.redirect('/admin/dashboard')
+    next()
   } else {
     res.render('admin/login', { admin: true })
   }
+}
+router.get('/',varfyingLoggedin, function (req, res) {
+  // if (req.session.adminLoggedin) {
+  //   res.redirect('/admin/dashboard')
+  // } else {
+  //   res.render('admin/login', { admin: true })
+  // }
 })
-router.get('/dashboard', function (req, res) {
-  res.render('admin/admin-home', { admin: true })
+router.get('/dashboard',varfyingLoggedin, function (req, res) {
+  res.render('admin/admin-home', { admin: true,ftwo:true })
 })
 router.post('/login', function (req, res, next) {
   adminHelpers.doLogin(req.body).then((response) => {
@@ -37,7 +44,7 @@ router.post('/login', function (req, res, next) {
 });
 
 // add product
-router.get('/product-table', async function (req, res, next) {
+router.get('/product-table',varfyingLoggedin, async function (req, res, next) {
   const categories = await productHelpers.getAllCategory()
   const brands = await productHelpers.getAllBrands()
   productHelpers.getAllProducts().then((products) => {
@@ -45,7 +52,7 @@ router.get('/product-table', async function (req, res, next) {
     res.render('admin/product-table', { ftwo: true, admin: true, products, alert, categories, brands })
   })
 })
-router.get('/add-productss', async function (req, res, next) {
+router.get('/add-productss',varfyingLoggedin,  async function (req, res, next) {
   const categories = await productHelpers.getAllCategory()
   const brands = await productHelpers.getAllBrands()
   res.render('admin/add-product', { admin: true, ftwo: true, categories, brands })
@@ -99,7 +106,7 @@ router.post('/edit-products/:id', storage.fields([{ name: 'images', maxCount: 1 
 })
 
 // managing user details
-router.get('/User-Table', function (req, res, next) {
+router.get('/User-Table',varfyingLoggedin, function (req, res, next) {
   userHelpers.getAllusers().then((User) => {
     // console.log(User);
     const alert = req.flash('msg')
@@ -108,7 +115,7 @@ router.get('/User-Table', function (req, res, next) {
 })
 router.get('/blockUser/:id', (req, res) => {
   userHelpers.blockUser(req.params.id).then((userName) => {
-    req.session.userLoggedIn = false
+    // req.session.userLoggedIn = false
     req.flash('msg', 'You Blocked ' + userName)
     res.redirect('/admin/User-Table')
   })
@@ -116,8 +123,8 @@ router.get('/blockUser/:id', (req, res) => {
 router.get('/unblockUser/:id', (req, res) => {
   let ID = req.params.id;
   userHelpers.unblockUser(req.params.id).then((userName) => {
-    req.session.userLoggedIn = true;
-    req.flash('msg', 'You Unblocked  ' + userName)
+    // req.session.userLoggedIn = true;
+    req.flash('msg', 'You Unblocked  ' + userName) 
     res.redirect("/admin/User-Table");
   });
 });
@@ -193,16 +200,16 @@ router.post('/change-orderStatus', (req, res) => {
 })
 
 // coupon section starts
-router.get('/coupon-management', (req, res) => {
+router.get('/coupon-management',varfyingLoggedin, (req, res) => {
   couponHelpers.getCoupon().then((coupon) => {
     console.log(coupon);
     res.render('admin/coupon', { admin: true, ftwo: true, coupon })
   })
 })
-router.get('/addCoupon', (req, res) => {
+router.get('/addCoupon',varfyingLoggedin, (req, res) => {
   res.render('admin/coupon-add', { admin: true, otp: true })
 })
-router.post('/addCoupon', (req, res) => {
+router.post('/addCoupon',varfyingLoggedin, (req, res) => {
   couponHelpers.addNewCoupon(req.body).then(() => {
     res.redirect('/admin/coupon-management')
   }).catch((err) => {

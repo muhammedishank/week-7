@@ -123,8 +123,16 @@ module.exports = {
             let User = await db.get().collection(collection.USER_COLLECTION).findOne({ _id: ObjectId(userId) })
             if (User) {
                 db.get().collection(collection.USER_COLLECTION).updateOne({ _id: ObjectId(userId) }, { $set: { block: true } }, { upsert: true })
-                resolve(User.name)
+                //  console.log(User);
+                resolve(User)
             }
+        })
+    },
+    getUser: (userId) => {
+        return new Promise(async (resolve, reject) => {
+            let User = await db.get().collection(collection.USER_COLLECTION).findOne({ _id: ObjectId(userId) })
+            console.log(User);
+            resolve(User)
         })
     },
     unblockUser: (userId) => {

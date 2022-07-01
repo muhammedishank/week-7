@@ -231,22 +231,16 @@
                   <label for="f-option5">COD</label>
                   <div class="check"></div>
                 </div>
-                <p>
-                  Please send a check to Store Name, Store Street, Store Town,
-                  Store State / County, Store Postcode.
-                </p>
+                
               </div>
               <div class="payment_item active">
                 <div class="radion_btn">
                   <input type="radio" id="f-option6" name="payment-method" value="razorpayPayment" />
-                  <label for="f-option6">razo Payment </label>
+                  <label for="f-option6">razorpay </label>
                   <img src="img/product/single-product/card.jpg" alt="" />
                   <div class="check"></div>
                 </div>
-                <p>
-                  Please send a check to Store Name, Store Street, Store Town,
-                  Store State / County, Store Postcode.
-                </p>
+                
               </div>
 
               <button type="submit" class="btn_3" href="#">Proceed To Pay</button>
@@ -283,6 +277,8 @@
   })
 
   function razorpayPayment(order) {
+    console.log(order)
+
     var options = {
       "key": "rzp_test_t14yQ06PFLBRMw", // Enter the Key ID generated from the Dashboard
       "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise

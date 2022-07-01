@@ -133,12 +133,12 @@
 
             <header class="border-bottom mb-4 pb-3">
                 <div class="form-inline">
-                    <span class="mr-md-auto">32 Items found </span>
+                    <span class="mr-md-auto"> </span>
                     <select class="mr-2 form-control">
-                        <option>Latest items</option>
+                        {{!-- <option>Latest items</option>
                         <option>Trending</option>
                         <option>Most Popular</option>
-                        <option>Cheapest</option>
+                        <option>Cheapest</option> --}}
                     </select>
                     <div class="btn-group">
                         <a href="#" class="btn btn-outline-secondary" data-toggle="tooltip" title=""
@@ -181,10 +181,10 @@
                                                 </h5>
 
 
-                                                <p class="card-text"><strong>Price : {{this.Prize}}</strong><br> <del
+                                                <p class="card-text"><strong><del
                                                         style="color: rgb(73, 69, 69);"> MRP :
                                                         {{this.currentPrize}}
-                                                    </del>
+                                                    </del><br>Price : {{this.Prize}}</strong>
                                                 </p>
                                                 <p class="card-text heartbeat"><strong style="color: green;">Offer :
                                                         {{this.Offer}}%</strong></p>

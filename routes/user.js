@@ -21,7 +21,16 @@ let filterResult
 // middleware for varfying login
 const varfyingLoggin = (req, res, next) => {
   if (req.session.userLoggedIn) {
-    next()
+    const userId = req.session.user._id
+    userHelpers.getUser(userId).then((user)=>{
+      if(user.block == true){
+        req.session.userLoggedIn = false
+        res.redirect('/user-login')
+      } else{
+        next()
+      }
+    })
+    
   } else {
     res.redirect('/user-login')
   }
@@ -296,7 +305,7 @@ router.post('/verify-payment', (req, res) => {
 })
 
 // wish-list starts
-router.get('/add-to-wishList/:id', (req, res) => {
+router.get('/add-to-wishList/:id',varfyingLoggin, (req, res) => {
   wishlistHelpers.addtoWishlist(req.params.id, req.session.user._id).then((response) => {
     res.json(response)
   })
@@ -346,7 +355,7 @@ router.get('/prod-details/:id', async (req, res) => {
   req.session.viewProduct = product
   res.redirect('/view-prod')
 })
-router.post('/viewprod-to-cart', async (req, res) => {
+router.post('/viewprod-to-cart',varfyingLoggin, async (req, res) => {
   const product = await productHelpers.getOneProductDetails(req.body.product)
   cartHelpers.addtoCart(req.body.product, req.body.user, product.Brand).then((response) => {
     res.json(response)
@@ -361,7 +370,7 @@ router.get('/user-profile', varfyingLoggin, async (req, res) => {
   res.render('user/profile', { user, wishlistCount, cartCount })
 
 })
-router.get('/edit-profile', async (req, res) => {
+router.get('/edit-profile',varfyingLoggin, async (req, res) => {
   const user = req.session.user
   const wishlistCount = await wishlistHelpers.wishlistCount(req.session.user._id)
   const cartCount = await cartHelpers.cartCount(req.session.user._id)
@@ -375,14 +384,14 @@ router.post('/editProfile-details', (req, res) => {
 
   })
 })
-router.get('/address-page', async (req, res) => {
+router.get('/address-page',varfyingLoggin, async (req, res) => {
   const user = req.session.user
   let Addresses = await userHelpers.getAddress(user._id)
   const wishlistCount = await wishlistHelpers.wishlistCount(user._id)
   const cartCount = await cartHelpers.cartCount(user._id)
   res.render('user/profile-address', { ftwo: true, user, wishlistCount, cartCount, Addresses })
 })
-router.get('/addAddress', async (req, res) => {
+router.get('/addAddress',varfyingLoggin, async (req, res) => {
   const user = req.session.user
   const wishlistCount = await wishlistHelpers.wishlistCount(req.session.user._id)
   const cartCount = await cartHelpers.cartCount(req.session.user._id)
@@ -405,7 +414,7 @@ router.get('/user-wishlist', (req, res) => {
 router.get('/user-cart', (req, res) => {
   res.redirect('/cart')
 })
-router.get('/editAddress/:id', async (req, res) => {
+router.get('/editAddress/:id',varfyingLoggin, async (req, res) => {
   const user = req.session.user
   const address = await userHelpers.getOneAddress(req.params.id, user._id)
   const wishlistCount = await wishlistHelpers.wishlistCount(req.session.user._id)
@@ -419,27 +428,27 @@ router.post('/editAddress/:id', async (req, res) => {
     res.redirect('/address-page')
   })
 })
-router.get('/deleteAddress/:id', async (req, res) => {
+router.get('/deleteAddress/:id',varfyingLoggin, async (req, res) => {
   const user = req.session.user
   const address = await userHelpers.getOneAddress(req.params.id, user._id)
   userHelpers.deleteAddress(address.id, user._id).then((response) => {
     res.redirect('/address-page')
   })
 })
-router.get('/allOrders', async (req, res) => {
+router.get('/allOrders',varfyingLoggin, async (req, res) => {
   const user = req.session.user
   const cartCount = await cartHelpers.cartCount(req.session.user._id)
   const wishlistCount = await wishlistHelpers.wishlistCount(req.session.user._id)
   const orders = await billingHelpers.getAllOrders(user._id)
   res.render('user/ordersAll', { orders, user, cartCount, wishlistCount })
 })
-router.get('/viewOrderProducts/:id', async (req, res) => {
+router.get('/viewOrderProducts/:id',varfyingLoggin, async (req, res) => {
   const user = req.session.user
   const orderProducts = await billingHelpers.getOrderProducts(req.params.id)
   const orderedDetails = await billingHelpers.getOrderedDetails(req.params.id)
   const cartCount = await cartHelpers.cartCount(req.session.user._id)
   const wishlistCount = await wishlistHelpers.wishlistCount(req.session.user._id)
-  if (orderedDetails.status == 'pending') {
+  if (orderedDetails.status == 'failed') {
     proLength = orderProducts.length
     res.render('user/pending-order', { user, orderProducts, orderedDetails, proLength, cartCount, wishlistCount })
   } else {
@@ -449,7 +458,7 @@ router.get('/viewOrderProducts/:id', async (req, res) => {
     }
   }
 })
-router.get('/view-oneOrder-product/:id', async (req, res) => {
+router.get('/view-oneOrder-product/:id',varfyingLoggin, async (req, res) => {
   let orderId = req.params.id
   let { proId, proLength, orderCancelCount } = req.query
   const user = req.session.user
@@ -467,7 +476,7 @@ router.post('/cancel-order', (req, res) => {
     res.json({ status: true })
   })
 })
-router.get('/get-invoice/:id', async (req, res) => {
+router.get('/get-invoice/:id',varfyingLoggin, async (req, res) => {
   const user = req.session.user
   const orderProducts = await billingHelpers.getOrderProducts(req.params.id)
   const orderedDetails = await billingHelpers.getOrderedDetails(req.params.id)
@@ -516,18 +525,19 @@ router.post('/search-brand', (req, res) => {
   console.log(req.body);
   let a = req.body
   let price = parseInt(a.Prize)
-  let filter = []
+  let brandFilter = []
+  let cateFilter=[]
+  
   for (let i of a.Brand) {
-    filter.push({ 'Brand': i })
+    brandFilter.push({ 'Brand': i })
   }
   for (let i of a.Category) {
-    filter.push({ 'Category': i })
+    cateFilter.push({ 'Category': i })
   }
-  shoppingHelpers.searchFilter(filter, price).then((result) => {
+  shoppingHelpers.searchFilter(brandFilter,cateFilter, price).then((result) => {
     filterResult = result
     res.json({ status: true })
   })
-  console.log(filter);
 })
 router.get('/products', async (req, res) => {
   const brand = await shoppingHelpers.getAllbrand()
@@ -536,11 +546,12 @@ router.get('/products', async (req, res) => {
 })
 router.get('/oneBrand/:id', async (req, res) => {
   filterResult = await shoppingHelpers.getOneBrand(req.params.id)
-  // console.log(filterResult.length);
   res.redirect('/products')
 })
 router.get('/latest-products', async (req, res) => {
   filterResult = await shoppingHelpers.Newarrivals()
   res.redirect('/products')
 })
-module.exports = router    
+module.exports = router  
+
+

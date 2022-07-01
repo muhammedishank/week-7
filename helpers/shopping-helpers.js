@@ -24,29 +24,148 @@ module.exports = {
             resolve(newProducts)
         })
     },
-    searchFilter :(filter,price) => {
+
+
+    // searchFilter: (brandFilter, cateFilter, price) => {
+    //     return new Promise(async (resolve, reject) => {
+    //       let result;
+    //       console.log(brandFilter);
+    //       if (brandFilter.length > 0 && cateFilter.length > 0) {
+    //         result = await db
+    //           .get()
+    //           .collection(collection.PRODUCT_COLLECTION)
+    //           .aggregate([
+    //             {
+    //               $match: { $or: brandFilter },
+    //             },
+    //             {
+    //               $match: { $or: cateFilter },
+    //             },
+    //             {
+    //               $match: { price: { $lt: price } },
+    //             },
+    //           ])
+    //           .toArray();
+    //       } else if (brandFilter.length > 0 && cateFilter.length == 0) {
+    //         result = await db
+    //           .get()
+    //           .collection(collection.PRODUCT_COLLECTION)
+    //           .aggregate([
+    //             {
+    //               $match: { $or: brandFilter },
+    //             },
+    //             {
+    //               $match: { price: { $lt: price } },
+    //             },
+    //           ])
+    //           .toArray();
+    //       } else if (brandFilter.length == 0 && cateFilter.length > 0)
+    //         result = await db
+    //           .get()
+    //           .collection(collection.PRODUCT_COLLECTION)
+    //           .aggregate([
+    //             {
+    //               $match: { $or: cateFilter },
+    //             },
+    //             {
+    //               $match: { price: { $lt: price } },
+    //             },
+    //           ])
+    //           .toArray();
+    //       else {
+    //         result = await db
+    //           .get()
+    //           .collection(collection.PRODUCT_COLLECTION)
+    //           .aggregate([
+    //             {
+    //               $match: { price: { $lt: price } },
+    //             },
+    //           ])
+    //           .toArray();
+    //       }
+    //       console.log(result);
+    //       resolve(result);
+    //     });
+    //   },
+
+
+    searchFilter :(brandFilter, cateFilter, price) => {
         return new Promise(async (resolve, reject) => {
             let result
-            if (filter.length>0){
-                 result = await db.get().collection(collection.PRODUCT_COLLECTION).aggregate([
+            if (brandFilter.length > 0 && cateFilter.length > 0) {
+                result = await db
+                  .get()
+                  .collection(collection.PRODUCT_COLLECTION)
+                  .aggregate([
                     {
-                        $match:{ $or:filter}
+                      $match: { $or: brandFilter },
+                    },
+                    {
+                      $match: { $or: cateFilter },
                     },
                     {
                         $match:{Prize:{$lt:price}}
-                    }
-                ]).toArray()
-            } else{
-                 result = await db.get().collection(collection.PRODUCT_COLLECTION).aggregate([
+                    },
+                  ])
+                  .toArray();
+                } else if (brandFilter.length > 0 && cateFilter.length == 0) {
+                    result = await db
+                      .get()
+                      .collection(collection.PRODUCT_COLLECTION)
+                      .aggregate([
+                        {
+                          $match: { $or: brandFilter },
+                        },
+                        {
+                            $match:{Prize:{$lt:price}}
+                        },
+                      ])
+                      .toArray();
+                  } else if (brandFilter.length == 0 && cateFilter.length > 0)
+                    result = await db
+                      .get()
+                      .collection(collection.PRODUCT_COLLECTION)
+                      .aggregate([
+                        {
+                          $match: { $or: cateFilter },
+                        },
+                        {
+                            $match:{Prize:{$lt:price}}
+                        },
+                      ])
+                      .toArray();
+                  else {
+                    result = await db
+                      .get()
+                      .collection(collection.PRODUCT_COLLECTION)
+                      .aggregate([
+                        {
+                            $match:{Prize:{$lt:price}}
+                        },
+                      ])
+                      .toArray();
+                  }
+                  resolve(result);
+            // if (filter.length>0){
+            //      result = await db.get().collection(collection.PRODUCT_COLLECTION).aggregate([
+            //         {
+            //             $match:{ $or:filter}
+            //         },
+            //         {
+            //             $match:{Prize:{$lt:price}}
+            //         }
+            //     ]).toArray() 
+            // } else{
+            //      result = await db.get().collection(collection.PRODUCT_COLLECTION).aggregate([
                     
-                    {
-                        $match:{Prize:{$lt:price}}
-                    }
-                ]).toArray()
-            }
+            //         {
+            //             $match:{Prize:{$lt:price}}
+            //         }
+            //     ]).toArray()
+            // }
             
-            //  console.log("",result);
-            resolve(result)
+            // //  console.log("",result);
+            // resolve(result)
         })
       },
       getAllbrand:()=>{

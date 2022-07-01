@@ -15,9 +15,9 @@
 
                                 <th scope="col">User</th>
 
-                                <th scope="col">Total</th>
-                                <th scope="col">Payment</th>
-
+                                <th scope="col">Total Bill</th>
+                                <th scope="col">Payment Method</th>
+                                <th scope="col">Status</th>
                                 <th scope="col">Details</th>
 
 
@@ -28,9 +28,9 @@
                             <tr>
 
                                 <td scope="row">
-                                    <div>Time :{{this.date}} </div>
-                                    <div>Date :{{this.date}}</div>
                                     <div>Order ID :{{this._id}}</div>
+                                    <div>Date :{{this.date}}</div>
+                                    
                                 </td>
 
                                 <td>
@@ -40,13 +40,16 @@
                                     <div>Mobile :{{this.deliveryDetails.mobile}}</div>
                                 </td>
                                 <td>
-                                    <div>RS.{{this.totalAmountToBePaid}}</div>
-                                    <div>Discount : RS.</div>
+                                    <div>₹{{this.totalAmountToBePaid}}</div>
+                                    {{!-- <div>Discount : <span style="color: green;">RS.{{Discount}}</span> </div> --}}
                                 </td>
 
                                 <td>
-                                    <div>Method :{{this.paymentMethod}} </div>
-                                    <div>Status :{{this.status}}</div>
+                                    <div>{{this.paymentMethod}} </div>
+                                </td>
+                                 <td>
+                                    
+                                    <div>Order<br>{{this.status}}</div>
                                 </td>
 
                                 <td><a href="/viewOrderProducts/{{this._id}}" class="btn btn-primary">Details</a></td>
