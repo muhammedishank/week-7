@@ -516,7 +516,6 @@ router.post("/searchResults", async (req, res) => {
 
 // shopping section
 router.get('/shopping', async (req, res) => {
-  const user = req.session.user
   filterResult = await productHelpers.getAllProducts()
   res.redirect('/products')
 
@@ -540,9 +539,17 @@ router.post('/search-brand', (req, res) => {
   })
 })
 router.get('/products', async (req, res) => {
+  const user = req.session.user
   const brand = await shoppingHelpers.getAllbrand()
   const category = await shoppingHelpers.getAllcategory()
-  res.render('user/shopping', { filterResult, brand, category })
+  if(user){
+    const cartCount = await cartHelpers.cartCount(req.session.user._id)
+    const wishlistCount = await wishlistHelpers.wishlistCount(req.session.user._id)
+    res.render('user/shopping', { filterResult, brand, category,user,cartCount,wishlistCount })
+  } else {
+    res.render('user/shopping', { filterResult, brand, category })
+
+  }
 })
 router.get('/oneBrand/:id', async (req, res) => {
   filterResult = await shoppingHelpers.getOneBrand(req.params.id)

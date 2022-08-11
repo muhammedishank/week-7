@@ -166,12 +166,25 @@
                                                 <p class="card-text heartbeat"><strong
                                                         style="color: rgb(0, 128, 90);">Offer :
                                                         {{this.Offer}}%</strong></p>
-
+                                                {{#if ../user}}
                                                 <button class="btn btn-danger"
                                                     onclick="addTowishlist('{{this._id}}')"><i
                                                         class="fa-solid fa-heart"></i></button>
                                                 <button class="btn btn-success" onclick="addToCart('{{this._id}}')"><i
                                                         class="fa-solid fa-cart-plus"></i></button>
+
+
+                                                {{else}}
+                                                <a href="/user-login"><button class="btn btn-danger"><i
+                                                            class="fa-solid fa-heart"></i></button></a>
+                                                <a href="/user-login"><button class="btn btn-success"><i
+                                                            class="fa-solid fa-cart-plus"></i></button></a>
+                                                {{/if}}
+                                                {{!-- <button class="btn btn-danger"
+                                                    onclick="addTowishlist('{{this._id}}')"><i
+                                                        class="fa-solid fa-heart"></i></button>
+                                                <button class="btn btn-success" onclick="addToCart('{{this._id}}')"><i
+                                                        class="fa-solid fa-cart-plus"></i></button> --}}
                                             </div>
                                         </div>
                                     </div>
@@ -274,16 +287,16 @@
                                 </p>
                                 <p class="card-text heartbeat"><strong style="color: green;">Offer :
                                         {{this.Offer}}%</strong></p>
-                                {{#if ../user}}
 
-<button class="btn btn-danger" onclick="addTowishlist('{{this._id}}')"><i
+                                {{#if ../user}}
+                                <button class="btn btn-danger" onclick="addTowishlist('{{this._id}}')"><i
                                         class="fa-solid fa-heart"></i></button>
                                 <button class="btn btn-success" onclick="addToCart('{{this._id}}')"><i
                                         class="fa-solid fa-cart-plus"></i></button>
 
-                               
+
                                 {{else}}
-                                 <a href="user-login"><button class="btn btn-danger"><i
+                                <a href="user-login"><button class="btn btn-danger"><i
                                             class="fa-solid fa-heart"></i></button></a>
                                 <a href="user-login"><button class="btn btn-success"><i
                                             class="fa-solid fa-cart-plus"></i></button></a>
